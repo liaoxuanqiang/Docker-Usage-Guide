@@ -39,37 +39,27 @@ docker run -d \
     adguard/adguardhome
 ```
 
+从示例中可以得知 Ad­Guard Home 所需要用到的端口，但实际情况并不是都会用到，这需要根据自身的需求来决定，以下是这些端口的作用：
+
+* `53`：DNS 端口。即其他设备访问 AdGuard Home 进行 DNS 解析的默认端口。因为部分系统不支持自定义 DNS 端口，所以不建议自定义。部署前务必要查看是否有其它程序占用。
+* `67`, `68`： DHCP 端口。除非想代替你路由上的 DHCP 服务器，否则用不到。
+* `80`: 管理页面默认 HTTP 端口。可忽略，在初始化页面设置管理端口为 3000 端口即可。
+* `443`：HTTPS 和 DoH 端口。本地内网环境不需要。
+* `853`：DoT 端口。不使用相关功能可忽略。
+* `3000`：初始化设置端口。除非通过配置文件去设置，否则必须开启。
+
+如果只是本地局域网使用一般只需要映射 `53` 和 `3000` 端口：
+
 ```bash
-docker run --name adguardhome\
-    --restart unless-stopped\
-    -v /my/own/workdir:/opt/adguardhome/work\
-    -v /my/own/confdir:/opt/adguardhome/conf\
-    -p 53:53/tcp -p 53:53/udp\
-    -p 67:67/udp -p 68:68/udp\
-    -p 80:80/tcp -p 443:443/tcp -p 443:443/udp -p 3000:3000/tcp\
-    -p 853:853/tcp\
-    -p 784:784/udp -p 853:853/udp -p 8853:8853/udp\
-    -p 5443:5443/tcp -p 5443:5443/udp\
-    -d adguard/adguardhome
+docker run -d \
+    --name adguardhome \
+    -v $PWD/adguardhome/work:/opt/adguardhome/work \
+    -v $PWD/adguardhome/conf:/opt/adguardhome/conf \
+    -p 53:53/tcp \
+    -p 53:53/udp \
+    -p 3000:3000/tcp \
+    adguard/adguardhome
 ```
-
-
-
-打开浏览器并导航到 ‎[‎http://127.0.0.1:3000/‎](http://127.0.0.1:3000)‎ 以控制您的 AdGuard 家庭版服务
-
-不要忘记使用您自己的‎**‎数据‎**‎和‎**‎配置‎**‎目录！
-
-`-p 53:53/tcp -p 53:53/udp`‎:‎‎纯域名解析‎.&#x20;
-
-`-p 67:67/udp -p 68:68/tcp -p 68:68/udp`: ‎将 AdGuard Home 用作 DHCP 服务器
-
-`-p 80:80/tcp -p 443:443/tcp -p 443:443/udp -p 3000:3000/tcp`: ‎使用 AdGuard Home 的管理面板以及将 AdGuard Home 作为 ‎‎HTTPS/DNS-over-HTTPS‎‎ 服务器运行
-
-`-p 853:853/tcp`: ‎添加是否要将 AdGuard Home 作为 ‎‎DNS-over-TLS‎‎ 服务器运行‎.&#x20;
-
-`-p 784:784/udp -p 853:853/udp -p 8853:8853/udp`: ‎将 AdGuard Home 作为 ‎‎DNS-over-QUIC‎‎ 服务器运行。您只能留下其中的一两个‎.。
-
-`-p 5443:5443/tcp -p 5443:5443/udp`: ‎将AdGuard Home作为‎‎DNSCrypt‎‎服务器运行。
 
 ### ‎控制容器‎
 
@@ -177,6 +167,24 @@ https://dns11.quad9.net/dns-query
 #### DNS 封锁清单 <a href="#toc_12" id="toc_12"></a>
 
 这里是人民群众喜闻乐见的去广告环节。
+
+
+
+| 名称                                                                                                    | 简介                                                                   | 地址                                                                                                                                                                                        |
+| ----------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AdGuard DNS Filter                                                                                    | AdGuard 官方维护的广告规则，涵盖多种过滤规则                                           | [https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt](https://p3terx.com/go/aHR0cHM6Ly9hZGd1YXJkdGVhbS5naXRodWIuaW8vQWRHdWFyZFNETlNGaWx0ZXIvRmlsdGVycy9maWx0ZXIudHh0)      |
+| [AdAway](https://p3terx.com/go/aHR0cHM6Ly9hZGF3YXkub3JnLw)                                            | AdAway 官方的去广告 Host 规则                                                | [https://adaway.org/hosts.txt](https://p3terx.com/go/aHR0cHM6Ly9hZGF3YXkub3JnL2hvc3RzLnR4dA)                                                                                              |
+| [ADgk](https://p3terx.com/go/aHR0cHM6Ly9naXRodWIuY29tL2JhbmJlbmRhbGFvL0FEZ2s)                         | 适用于 AdGuard for Android 的去广告规则，去视频 APP 广告、开屏广告                       | [https://banbendalao.coding.net/p/adgk/d/ADgk/git/raw/master/ADgk.txt](https://p3terx.com/go/aHR0cHM6Ly9iYW5iZW5kYWxhby5jb2RpbmcubmV0L3AvYWRnay9kL0FEZ2svZ2l0L3Jhdy9tYXN0ZXIvQURnay50eHQ) |
+| [anti-AD](https://p3terx.com/go/aHR0cHM6Ly9naXRodWIuY29tL3ByaXZhY3ktcHJvdGVjdGlvbi10b29scy9hbnRpLUFE) | 命中率高、兼容性强                                                            | [https://anti-ad.net/easylist.txt](https://p3terx.com/go/aHR0cHM6Ly9hbnRpLWFkLm5ldC9lYXN5bGlzdC50eHQ)                                                                                     |
+| [halflife](https://p3terx.com/go/aHR0cHM6Ly9hZGYubWluZ2dvLmV1Lm9yZy8)                                 | 涵盖了 EasyList China、EasyList Lite、CJX 's Annoyance、乘风视频过滤规则，以及补充的其它规则 | [https://cdn.jsdelivr.net/gh/o0HalfLife0o/list@master/ad.txt](https://p3terx.com/go/aHR0cHM6Ly9jZG4uanNkZWxpdnIubmV0L2doL28wSGFsZkxpZmUwby9saXN0QG1hc3Rlci9hZC50eHQ)                      |
+| [EasyList](https://p3terx.com/go/aHR0cHM6Ly9lYXN5bGlzdC50by8)                                         | Adblock Plus 官方维护的广告规则                                               | [https://easylist-downloads.adblockplus.org/easylist.txt](https://p3terx.com/go/aHR0cHM6Ly9lYXN5bGlzdC1kb3dubG9hZHMuYWRibG9ja3BsdXMub3JnL2Vhc3lsaXN0LnR4dA)                               |
+| EasyList China                                                                                        | 面向中文用户的 EasyList 去广告规则                                               | [https://easylist-downloads.adblockplus.org/easylistchina.txt](https://p3terx.com/go/aHR0cHM6Ly9lYXN5bGlzdC1kb3dubG9hZHMuYWRibG9ja3BsdXMub3JnL2Vhc3lsaXN0Y2hpbmEudHh0)                    |
+| EasyPrivacy                                                                                           | 反隐私跟踪、挖矿规则                                                           | [https://easylist-downloads.adblockplus.org/easyprivacy.txt](https://p3terx.com/go/aHR0cHM6Ly9lYXN5bGlzdC1kb3dubG9hZHMuYWRibG9ja3BsdXMub3JnL2Vhc3lwcml2YWN5LnR4dA)                        |
+| [Xinggsf 乘风通用](https://p3terx.com/go/aHR0cHM6Ly9naXRlZS5jb20veGluZ2dzZi9BZGJsb2NrLVJ1bGUv)            | 国内网站广告过滤规则                                                           | [https://gitee.com/xinggsf/Adblock-Rule/raw/master/rule.txt](https://p3terx.com/go/aHR0cHM6Ly9naXRlZS5jb20veGluZ2dzZi9BZGJsb2NrLVJ1bGUvcmF3L21hc3Rlci9ydWxlLnR4dA)                        |
+| [Xinggsf 乘风视频](https://p3terx.com/go/aHR0cHM6Ly9naXRlZS5jb20veGluZ2dzZi9BZGJsb2NrLVJ1bGUv)            | 视频网站广告过滤规则                                                           | [https://gitee.com/xinggsf/Adblock-Rule/raw/master/mv.txt](https://p3terx.com/go/aHR0cHM6Ly9naXRlZS5jb20veGluZ2dzZi9BZGJsb2NrLVJ1bGUvcmF3L21hc3Rlci9tdi50eHQ)                             |
+| MalwareDomainList                                                                                     | 恶意软件过滤规则                                                             | [https://www.malwaredomainlist.com/hostslist/hosts.txt](https://p3terx.com/go/aHR0cHM6Ly93d3cubWFsd2FyZWRvbWFpbmxpc3QuY29tL2hvc3RzbGlzdC9ob3N0cy50eHQ)                                    |
+| Adblock Warning Removal List                                                                          | 去除禁止广告拦截提示规则                                                         | [https://easylist-downloads.adblockplus.org/antiadblockfilters.txt](https://p3terx.com/go/aHR0cHM6Ly9lYXN5bGlzdC1kb3dubG9hZHMuYWRibG9ja3BsdXMub3JnL2FudGlhZGJsb2NrZmlsdGVycy50eHQ)        |
+| Fanboy's Annoyances List                                                                              | 去除页面弹窗广告规则                                                           | [https://easylist-downloads.adblockplus.org/fanboy-annoyance.txt](https://p3terx.com/go/aHR0cHM6Ly9lYXN5bGlzdC1kb3dubG9hZHMuYWRibG9ja3BsdXMub3JnL2ZhbmJveS1hbm5veWFuY2UudHh0)             |
 
 #### DNS 允许清单 <a href="#toc_13" id="toc_13"></a>
 
