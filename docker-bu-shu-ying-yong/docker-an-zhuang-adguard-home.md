@@ -71,18 +71,18 @@ docker run -d \
 
 ### 更新到较新版本‎
 
-1.  ‎从 Docker Hub 拉出新版本:
+*   ‎从 Docker Hub 拉出新版本:
 
     ```
     docker pull adguard/adguardhome
     ```
-2.  停止并删除当前正在运行的容器（假设容器被命名为‎`adguardhome`):
+*   停止并删除当前正在运行的容器（假设容器被命名为‎`adguardhome`):
 
     ```
     docker stop adguardhome
     docker rm adguardhome
     ```
-3. ‎使用上一节中的命令使用新映像创建和启动容器‎.
+* ‎使用上一节中的命令使用新映像创建和启动容器‎.
 
 ### 设置 <a href="#toc_1" id="toc_1"></a>
 
