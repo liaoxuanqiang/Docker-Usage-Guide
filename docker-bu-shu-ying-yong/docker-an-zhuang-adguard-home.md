@@ -1,4 +1,6 @@
-# Docker 安装AdGuard Home
+# Docker 安装 AdGuard Home
+
+## 项目简介
 
 AdGuard Home 是一款全网广告拦截与反跟踪软件。在您将其安装完毕后，它将保护您所有家用设备，同时您不再需要安装任何客户端软件。随着物联网与连接设备的兴起，掌控您自己的整个网络环境变得越来越重要。
 
@@ -6,21 +8,19 @@ AdGuard Home 是一款全网广告拦截与反跟踪软件。在您将其安装�
 AdGuard Home 官网
 {% endembed %}
 
-## AdGuard Home 项目资源
-
 {% embed url="https://github.com/AdguardTeam/AdguardHome" %}
 AdGuard Home - Github
 {% endembed %}
 
-## AdGuard Home 安装
+## 项目安装
 
-**Docker Pull AdGuardHome Image**
+**Docker Pull  Image**
 
 ```bash
 docker pull adguard/adguardhome
 ```
 
-### ‎创建并运行容器‎
+‎**创建并运行容器‎**
 
 ```bash
 docker run -d \
@@ -61,7 +61,9 @@ docker run -d \
     adguard/adguardhome
 ```
 
-### ‎控制容器‎
+## 相关设置
+
+**‎控制容器‎**
 
 开启：`start adguardhome`&#x20;
 
@@ -69,46 +71,39 @@ docker run -d \
 
 删除：`docker rm adguardhom`
 
-### 更新到较新版本‎
+**更新到较新版本‎**
 
-*   ‎从 Docker Hub 拉出新版本:
+1.  从 Docker Hub 拉出新版本:
 
     ```
     docker pull adguard/adguardhome
     ```
-*   停止并删除当前正在运行的容器（假设容器被命名为‎`adguardhome`):
+2.  停止并删除当前正在运行的容器（假设容器被命名为‎`adguardhome`):
 
     ```
     docker stop adguardhome
     docker rm adguardhome
     ```
-* ‎使用上一节中的命令使用新映像创建和启动容器‎.
+3. ‎使用上一节中的命令使用新映像创建和启动容器‎.
 
-### 设置 <a href="#toc_1" id="toc_1"></a>
-
-#### 常规设置 <a href="#toc_2" id="toc_2"></a>
+### 常规设置 <a href="#toc_2" id="toc_2"></a>
 
 文字介绍已经很好理解了，按需设置即可。重点是以下几个，如果你尚处于单身状态，那么就不要开启，否则会影响生理卫生知识的学习。
 
 * **使用 AdGuard【家长控制】服务**：如果家中有尚未成年的孩子，建议开启，屏蔽成人内容。
 * **强制安全搜索**：在 Bing、Google、Yandex、YouTube 等网站上强制使用安全搜索，屏蔽 NSFW 内容。
 
-#### DNS 设置 <a href="#toc_3" id="toc_3"></a>
+### **DNS 设置** <a href="#toc_3" id="toc_3"></a>
 
 **上游 DNS 服务器**
 
-中国大陆
-
 ```
+中国大陆
 tls://dns.pub
 https://dns.pub/dns-query
 tls://dns.alidns.com
 https://dns.alidns.com/dns-query
-```
-
-国际网络环境
-
-```
+国际
 tls://dns.google
 https://dns.google/dns-query
 tls://dns11.quad9.net
@@ -125,7 +120,7 @@ https://dns11.quad9.net/dns-query
 119.28.28.28
 223.5.5.5
 223.6.6.6
-国际网络
+国际
 8.8.8.8
 8.8.4.4
 9.9.9.11
@@ -138,8 +133,6 @@ https://dns11.quad9.net/dns-query
 * **使用 EDNS** ：前面提及的上游 DNS 服务器都是支持 EDNS (ECS) 的，它有助于获取到更合适的 CDN 节点，建议勾选。
 * **使用 DNSSEC** : 用于效验 DNS 记录的签名，防止 DNS 缓存被投毒，建议勾选。勾选后会在日志页面请求列显示小绿锁图标。
 * **禁用 IPv6** ：丢弃 IPv6 的 DNS 查询。在本地网络和网站都支持 IPv6 会优先使用 IPv6 去访问网站，但目前 IPv6 的建设还处于初级阶段，大多数地区的 IPv6 网络体验都一般。还有一些代理软件对 IPv6 支持不佳，开启后可能会影响国际互联网的访问。如果对此没有特殊需求，那么直勾选即可，这样既不影响 BT 软件连接 IPv6 网络，又可以优先使用 IPv4 来上网。如果只有 IPv4 ，那么是否勾选没有区别。
-
-
 
 **DNS 缓存配置**
 
